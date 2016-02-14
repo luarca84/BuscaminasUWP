@@ -11,6 +11,7 @@ namespace App1
 {
     public class Celda : INotifyPropertyChanged
     {
+        #region Attributes
         int row;
         int column;
         string text;
@@ -20,7 +21,10 @@ namespace App1
         Visibility showQuestion = Visibility.Collapsed;
         Visibility showButton = Visibility.Visible;
         ViewModelBase viewModelBase= null;
+        private ICommand _leftClickCommand;
+        #endregion
 
+        #region Properties
         public string Text
         {
             get { return text; }
@@ -98,16 +102,6 @@ namespace App1
             }
         }
 
-
-        private ICommand _leftClickCommand;
-        public ICommand LeftClickCommand
-        {
-            get
-            {
-                return _leftClickCommand ?? (_leftClickCommand = new CommandHandler_Celda((Celda c) => MyActionLeftClick(c), true));
-            }
-        }
-
         internal ViewModelBase ViewModelBase
         {
             get
@@ -134,11 +128,24 @@ namespace App1
                 RaisePropertyChanged("ShowButton");
             }
         }
+        
+                
+        public ICommand LeftClickCommand
+        {
+            get
+            {
+                return _leftClickCommand ?? (_leftClickCommand = new CommandHandler_Celda((Celda c) => MyActionLeftClick(c), true));
+            }
+        }
 
+        #endregion
+
+        #region Methods
         public void MyActionLeftClick(Celda c)
         {
             viewModelBase.MyActionLeftClick(c);
         }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(String propertyName)

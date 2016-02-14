@@ -12,8 +12,24 @@ namespace App1
 {
     class ViewModelBase: INotifyPropertyChanged
     {
+        #region Attributes
         int numMinas = 10;
+        int numDificultad = 10;
+        List<Celda> celdas;
+        private bool _canExecute;
+        private ICommand _clickCommand;
+        private ICommand _leftClickCommand;
+        #endregion
 
+        #region Constructor
+        public ViewModelBase()
+        {
+            _canExecute = true;
+        }
+        #endregion
+
+
+        #region Properties
         public int NumMinas
         {
             get { return numMinas; }
@@ -23,7 +39,7 @@ namespace App1
                 RaisePropertyChanged("NumMinas");
             }
         }
-        int numDificultad = 10;
+
 
         public int NumDificultad
         {
@@ -35,12 +51,17 @@ namespace App1
             }
         }
 
-
-        public ViewModelBase()
+        public List<Celda> Celdas
         {
-            _canExecute = true;
+            get { return celdas; }
+            set
+            {
+                celdas = value;
+                RaisePropertyChanged("Celdas");
+            }
         }
-        private ICommand _clickCommand;
+
+
         public ICommand ClickCommand
         {
             get
@@ -48,14 +69,7 @@ namespace App1
                 return _clickCommand ?? (_clickCommand = new CommandHandler(() => MyAction(), _canExecute));
             }
         }
-        private bool _canExecute;
-        public void MyAction()
-        {
-            NuevoJuego();
-        }
 
-
-        private ICommand _leftClickCommand;
         public ICommand LeftClickCommand
         {
             get
@@ -63,6 +77,17 @@ namespace App1
                 return _leftClickCommand ?? (_leftClickCommand = new CommandHandler_Celda((Celda c) => MyActionLeftClick(c), true));
             }
         }
+
+        #endregion
+
+
+        #region Methods
+
+        public void MyAction()
+        {
+            NuevoJuego();
+        }
+              
 
         public async void MyActionLeftClick(Celda c)
         {
@@ -214,19 +239,8 @@ namespace App1
         {
             return celdas.Where(e => e.Row == row && e.Column == column).First();
         }
-
-        List<Celda> celdas;
-
-        public List<Celda> Celdas
-        {
-            get { return celdas; }
-            set
-            {
-                celdas = value;
-                RaisePropertyChanged("Celdas");
-            }
-        }
-
+        
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(String propertyName)
